@@ -16,6 +16,7 @@
 		E0D9A6FC1D473C6A00022A0E /* FHEmptyDataViewDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E0D9A6FB1D473C6A00022A0E /* FHEmptyDataViewDemoTests.m */; };
 		E0D9A7071D473C6A00022A0E /* FHEmptyDataViewDemoUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = E0D9A7061D473C6A00022A0E /* FHEmptyDataViewDemoUITests.m */; };
 		E0D9A7161D473C8400022A0E /* FHEmptyDataView.m in Sources */ = {isa = PBXBuildFile; fileRef = E0D9A7151D473C8400022A0E /* FHEmptyDataView.m */; };
+		E0D9A7191D488AEB00022A0E /* MyEmptyDataSetSource.m in Sources */ = {isa = PBXBuildFile; fileRef = E0D9A7181D488AEB00022A0E /* MyEmptyDataSetSource.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +55,8 @@
 		E0D9A7081D473C6A00022A0E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E0D9A7141D473C8400022A0E /* FHEmptyDataView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FHEmptyDataView.h; sourceTree = "<group>"; };
 		E0D9A7151D473C8400022A0E /* FHEmptyDataView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FHEmptyDataView.m; sourceTree = "<group>"; };
+		E0D9A7171D488AEB00022A0E /* MyEmptyDataSetSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyEmptyDataSetSource.h; sourceTree = "<group>"; };
+		E0D9A7181D488AEB00022A0E /* MyEmptyDataSetSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyEmptyDataSetSource.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,6 +113,8 @@
 				E0D9A6E81D473C6A00022A0E /* ViewController.m */,
 				E0D9A7141D473C8400022A0E /* FHEmptyDataView.h */,
 				E0D9A7151D473C8400022A0E /* FHEmptyDataView.m */,
+				E0D9A7171D488AEB00022A0E /* MyEmptyDataSetSource.h */,
+				E0D9A7181D488AEB00022A0E /* MyEmptyDataSetSource.m */,
 				E0D9A6EA1D473C6A00022A0E /* Main.storyboard */,
 				E0D9A6ED1D473C6A00022A0E /* Assets.xcassets */,
 				E0D9A6EF1D473C6A00022A0E /* LaunchScreen.storyboard */,
@@ -276,6 +281,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E0D9A6E91D473C6A00022A0E /* ViewController.m in Sources */,
+				E0D9A7191D488AEB00022A0E /* MyEmptyDataSetSource.m in Sources */,
 				E0D9A6E61D473C6A00022A0E /* AppDelegate.m in Sources */,
 				E0D9A7161D473C8400022A0E /* FHEmptyDataView.m in Sources */,
 				E0D9A6E31D473C6A00022A0E /* main.m in Sources */,

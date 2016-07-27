@@ -9,9 +9,10 @@
 #import <UIKit/UIKit.h>
 
 @class FHEmptyDataView;
+
 /**设置代理*/
 @protocol FHEmptyDataSetSource <NSObject>
-
+@optional
 /**
  *  图片内容
  */
@@ -27,30 +28,57 @@
 /**
  *  描述标题
  */
-- (NSString *)titleForDescriptionTitleInEmptyDataView:(FHEmptyDataView *)emptyDataView;
+- (NSAttributedString *)titleForDescriptionTitleInEmptyDataView:(FHEmptyDataView *)emptyDataView;
 /**
  *  标题与图标间隔
  */
 - (CGFloat)spaceHeightBetweenTitleAndIconImageViewInEmptyDataView:(FHEmptyDataView *)emptyDataView;
+/**
+ *  按钮标题
+ */
+- (NSAttributedString *)titleForButtonInEmptyDataView:(FHEmptyDataView *)emptyDataView;
+/**
+ *  按钮与标题间隔
+ */
+- (CGFloat)spaceHeightBetweenButtonAndTitleInEmptyDataView:(FHEmptyDataView *)emptyDataView;
 
 @end
 
 /**事件代理*/
 @protocol FHEmptyDataDelegate <NSObject>
-
+@optional
+/**
+ *  处理普通的Tap事件
+ */
+- (void)handleTapActionWithEmptyDataView:(FHEmptyDataView *)emptyDataView;
+/**
+ *  处理按钮点击
+ */
+- (void)handleButtonOnClickedWithEmptyDataView:(FHEmptyDataView *)emptyDataView;
 
 @end
 
+typedef NS_ENUM(NSUInteger, EmptyDataViewState){
+    EmptyDataViewStateDoneLoad = 0,
+    EmptyDataViewStateLoading,
+    EmptyDataViewStateNoData,
+    EmptyDataViewStateBadNetwork
+};
+
+#pragma mark - Class FHEmptyDataView
+
 @interface FHEmptyDataView : UIView
-//
-//@property (nonatomic, strong, readonly) UIImageView *imvIcon;
 
 @property (nonatomic, strong, readonly) UILabel *lblTitle;
-//
-//@property (nonatomic, strong, readonly) UIButton *lblButton;
 
 @property (nonatomic, weak) id<FHEmptyDataSetSource> setSource;
 
 @property (nonatomic, weak) id<FHEmptyDataDelegate> delegate;
 
+@property (nonatomic, assign) EmptyDataViewState loadState;
+
+/**
+ *  更新状态
+ */
+- (void)refreshState;
 @end
