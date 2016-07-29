@@ -42,6 +42,9 @@
  */
 - (CGFloat)spaceHeightBetweenButtonAndTitleInEmptyDataView:(FHEmptyDataView *)emptyDataView;
 
+/**整体居中 Default is YES*/
+- (BOOL)shouldVerticalBeCentedInEmptyDataView:(FHEmptyDataView *)emptyDataView;
+
 @end
 
 /**事件代理*/

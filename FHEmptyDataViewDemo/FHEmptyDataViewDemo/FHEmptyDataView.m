@@ -24,6 +24,7 @@
         unsigned int heightBetweenTitleAndImvFlag:1;
         unsigned int titleForButtonFlag:1;
         unsigned int heightBetweenButtonAndTitleFlag:1;
+        unsigned int verticalCenterFlag:1;
     }_setSourceFlag;
     
     struct {
@@ -38,7 +39,7 @@
 @property (nonatomic, strong) UIButton *btnClick;
 @end
 
-static CGFloat const kIconWidthDefault = 100.f;
+static CGFloat const kIconWidthDefault = 120.f;
 static CGFloat const kTitleHeightDefault = 30.f;
 static CGFloat const kSpaceTitleDefault = 15.f;
 static CGFloat const kButtonHeightDefault = 30.f;
@@ -63,6 +64,7 @@ static CGFloat const kSpaceButtonClick = 15.f;
 
 - (void)initialize
 {
+    self.translatesAutoresizingMaskIntoConstraints = NO;
     [self setupSubViews];
     [self setupTapGesture];
 }
@@ -72,25 +74,28 @@ static CGFloat const kSpaceButtonClick = 15.f;
 - (void)setupSubViews
 {
     self.imvIcon = [[UIImageView alloc] init];
+    [self addSubview:self.imvIcon];
     self.imvIcon.backgroundColor = [UIColor clearColor];
     self.imvIcon.contentMode = UIViewContentModeScaleAspectFill;
-    [self addSubview:self.imvIcon];
+    self.imvIcon.translatesAutoresizingMaskIntoConstraints = NO;
     
     self.lblTitle = [[UILabel alloc] init];
+    [self addSubview:self.lblTitle];
     [self.lblTitle setBackgroundColor:[UIColor clearColor]];
     self.lblTitle.textAlignment = NSTextAlignmentCenter;
     self.lblTitle.textColor = [UIColor colorWithWhite:0.6 alpha:1.0];
     self.lblTitle.font = [UIFont systemFontOfSize:26];
-    [self addSubview:self.lblTitle];
+    self.lblTitle.translatesAutoresizingMaskIntoConstraints = NO;
     
     
     self.btnClick = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self addSubview:self.btnClick];
     [self.btnClick setBackgroundColor:[UIColor clearColor]];
     [self.btnClick setTitleColor:[UIColor colorWithWhite:0.6 alpha:1.0] forState:UIControlStateNormal];
     [self.btnClick.titleLabel setFont:[UIFont systemFontOfSize:17]];
     self.btnClick.titleLabel.textAlignment = NSTextAlignmentCenter;
     [self.btnClick addTarget:self action:@selector(handleButtonOnClick) forControlEvents:UIControlEventTouchUpInside];
-    [self addSubview:self.btnClick];
+    self.btnClick.translatesAutoresizingMaskIntoConstraints = NO;
 }
 
 - (void)setupTapGesture
@@ -103,9 +108,11 @@ static CGFloat const kSpaceButtonClick = 15.f;
 - (void)layoutSubviews
 {
     [super layoutSubviews];
+    CGFloat totalHeight;
     /**SetIconImageView*/
-    self.imvIcon.center = self.center;
+    self.imvIcon.center = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
     self.imvIcon.frame = CGRectMake(self.imvIcon.frame.origin.x , self.imvIcon.frame.origin.y, kIconWidthDefault, kIconWidthDefault);
+
     if (_setSourceFlag.imageForIconFlag){
         UIImage *iconImage = [_setSource imageForIconImageViewInEmptyDataView:self];
         self.imvIcon.image = iconImage;
@@ -114,31 +121,94 @@ static CGFloat const kSpaceButtonClick = 15.f;
         CGSize imvIconSize = [_setSource sizeForIconImageViewInEmptyDataView:self];
         self.imvIcon.frame = CGRectMake(self.imvIcon.frame.origin.x, self.imvIcon.frame.origin.y, imvIconSize.width, imvIconSize.height);
     }
+    
+    CGFloat imvIconVertical = 0.f;
     if (_setSourceFlag.vertialOffsetForIconFlag) {
-        CGFloat imvIconVertical = [_setSource vertialOffSetForIconImageViewInEmptyDataView:self];
-        self.imvIcon.frame = CGRectMake(self.imvIcon.frame.origin.x, self.imvIcon.frame.origin.y + imvIconVertical, self.imvIcon.frame.size.width, self.imvIcon.frame.size.height);
+        imvIconVertical = [_setSource vertialOffSetForIconImageViewInEmptyDataView:self];
     }
+    self.imvIcon.frame = CGRectMake(self.imvIcon.frame.origin.x, self.imvIcon.frame.origin.y + imvIconVertical, self.imvIcon.frame.size.width, self.imvIcon.frame.size.height);
+    totalHeight += self.imvIcon.frame.size.height;
     
     /**SetTitleLabel*/
-    self.lblTitle.frame = CGRectMake(0, CGRectGetMaxY(self.imvIcon.frame) + kSpaceTitleDefault, self.frame.size.width, kTitleHeightDefault);
     if (_setSourceFlag.titleForDescriptionFlag) {
         NSAttributedString *titleString = [_setSource titleForDescriptionTitleInEmptyDataView:self];
         [self.lblTitle setAttributedText:titleString];
     }
+    CGFloat spaceHeight = kSpaceTitleDefault;
     if (_setSourceFlag.heightBetweenTitleAndImvFlag) {
-        CGFloat spaceHeight = [_setSource spaceHeightBetweenTitleAndIconImageViewInEmptyDataView:self];
-        self.lblTitle.frame = CGRectMake(0, self.lblTitle.frame.origin.y + spaceHeight, self.lblTitle.frame.size.width, self.lblTitle.frame.size.height);
+        spaceHeight = [_setSource spaceHeightBetweenTitleAndIconImageViewInEmptyDataView:self];
     }
+    self.lblTitle.frame = CGRectMake(0, CGRectGetMaxY(self.imvIcon.frame) + spaceHeight, self.lblTitle.frame.size.width, kTitleHeightDefault);
+    totalHeight += (spaceHeight + self.lblTitle.frame.size.height);
     
     /**SetButton*/
-    self.btnClick.frame = CGRectMake(0, CGRectGetMaxY(self.lblTitle.frame) + kSpaceButtonClick, self.frame.size.width, kButtonHeightDefault);
+    self.btnClick.frame = CGRectMake(0, CGRectGetMaxY(self.lblTitle.frame) + kSpaceButtonClick, self.bounds.size.width, kButtonHeightDefault);
     if (_setSourceFlag.titleForButtonFlag) {
         NSAttributedString *buttonTitle = [_setSource titleForButtonInEmptyDataView:self];
         [self.btnClick setAttributedTitle:buttonTitle forState:UIControlStateNormal];
     }
+    CGFloat spaceBetweenButton = kSpaceButtonClick;
     if (_setSourceFlag.heightBetweenButtonAndTitleFlag) {
-        CGFloat spaceBetweenButton = [_setSource spaceHeightBetweenButtonAndTitleInEmptyDataView:self];
-        self.btnClick.frame = CGRectMake(0, self.btnClick.frame.origin.y + spaceBetweenButton, self.frame.size.width, kButtonHeightDefault);
+        spaceBetweenButton = [_setSource spaceHeightBetweenButtonAndTitleInEmptyDataView:self];
+    }
+    self.btnClick.frame = CGRectMake(0, CGRectGetMaxY(self.lblTitle.frame) + spaceBetweenButton, self.bounds.size.width, kButtonHeightDefault);
+
+    totalHeight += (spaceBetweenButton + self.btnClick.frame.size.height);
+    
+    /**VerticalCenter*/
+    if (_setSourceFlag.verticalCenterFlag && ![_setSource shouldVerticalBeCentedInEmptyDataView:self]) {
+        return;
+    }else
+    {
+        CGFloat originY = (self.bounds.size.height - totalHeight)/2.f;
+        
+        [self removeConstraints:self.constraints];
+        [self addConstraint:[NSLayoutConstraint constraintWithItem:self.imvIcon
+                                                         attribute:NSLayoutAttributeTop
+                                                         relatedBy:NSLayoutRelationEqual
+                                                            toItem:self
+                                                         attribute:NSLayoutAttributeTop
+                                                        multiplier:1
+                                                          constant:originY]];
+        
+        [self addConstraint:[NSLayoutConstraint constraintWithItem:self.imvIcon
+                                                         attribute:NSLayoutAttributeCenterX
+                                                         relatedBy:NSLayoutRelationEqual
+                                                            toItem:self
+                                                         attribute:NSLayoutAttributeCenterX
+                                                        multiplier:1
+                                                          constant:0]];
+        
+        [self addConstraint:[NSLayoutConstraint constraintWithItem:self.lblTitle
+                                                         attribute:NSLayoutAttributeTop
+                                                         relatedBy:NSLayoutRelationEqual
+                                                            toItem:self.imvIcon
+                                                         attribute:NSLayoutAttributeBottom
+                                                        multiplier:1
+                                                          constant:spaceHeight]];
+        
+        [self addConstraint:[NSLayoutConstraint constraintWithItem:self.lblTitle
+                                                         attribute:NSLayoutAttributeCenterX
+                                                         relatedBy:NSLayoutRelationEqual
+                                                            toItem:self
+                                                         attribute:NSLayoutAttributeCenterX
+                                                        multiplier:1 constant:0]];
+        
+        [self addConstraint:[NSLayoutConstraint constraintWithItem:self.btnClick
+                                                         attribute:NSLayoutAttributeTop
+                                                         relatedBy:NSLayoutRelationEqual
+                                                            toItem:self.lblTitle
+                                                         attribute:NSLayoutAttributeBottom
+                                                        multiplier:1
+                                                          constant:spaceBetweenButton]];
+        
+        [self addConstraint:[NSLayoutConstraint constraintWithItem:self.btnClick
+                                                         attribute:NSLayoutAttributeCenterX
+                                                         relatedBy:NSLayoutRelationEqual
+                                                            toItem:self
+                                                         attribute:NSLayoutAttributeCenterX
+                                                        multiplier:1
+                                                          constant:0]];
     }
 }
 
@@ -167,6 +237,9 @@ static CGFloat const kSpaceButtonClick = 15.f;
     }
     if ([_setSource respondsToSelector:@selector(spaceHeightBetweenButtonAndTitleInEmptyDataView:)]){
         _setSourceFlag.heightBetweenButtonAndTitleFlag = YES;
+    }
+    if ([_setSource respondsToSelector:@selector(shouldVerticalBeCentedInEmptyDataView:)]){
+        _setSourceFlag.verticalCenterFlag = YES;
     }
 }
 
